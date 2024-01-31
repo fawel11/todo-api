@@ -1,0 +1,253 @@
+{
+	"info": {
+		"_postman_id": "809b195e-3b4c-456a-bacb-ef6fecc7ac45",
+		"name": "Restaurant API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15419327"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "brittany.vandervort@example.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/auth/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "category list fetch",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "paginate",
+							"value": "10",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/category/list",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"category",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "store category",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Sub Category1.1.1",
+							"type": "text"
+						},
+						{
+							"key": "parent_id",
+							"value": "5",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/category/store",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"category",
+						"store"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "store item",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "item-3",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "amount",
+							"value": "70",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/item/store",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"store"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "store discount",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": " ",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "type",
+							"value": "all_menu",
+							"type": "text"
+						},
+						{
+							"key": "value",
+							"value": " 6",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
+							"value": " ",
+							"type": "text"
+						},
+						{
+							"key": "item_id",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/discount/store",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"discount",
+						"store"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get menu",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{url}}/menu",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"menu"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "28|i085FOPXcZqFL0s33anJ2IhzbkteilrloeQ82UFp",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
