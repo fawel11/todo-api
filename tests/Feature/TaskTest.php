@@ -19,6 +19,7 @@ class TaskTest extends TestCase
 
     protected $title = "Lorem ipsum dolor sit amet";
     protected $description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+    private $task;
 
 
     protected function authenticate()
@@ -49,13 +50,13 @@ class TaskTest extends TestCase
 
     protected function createTask()
     {
-        $todo = Task::create([
+        $task = Task::create([
             'title' => $this->title,
             'description' => $this->description
         ]);
 
-        $this->user->tasks()->save($todo);
-        return $todo;
+        $this->user->tasks()->save($task);
+        return $task;
 
     }
 
@@ -98,12 +99,45 @@ class TaskTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token
-        ])->json('PUT', route('api.task.update', ['id' => $task->id]), [
+        ])->json('POST', route('api.task.update', ['id' => $task->id]), [
             'title' => 'This is an Updated title'
         ]);
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         //Assert title is the new title
-        $this->assertEquals('This is an Updated title', $this->user->todos()->first()->title);
+        $this->assertEquals('This is an Updated title', $this->user->tasks()->first()->title);
+    }
+
+    public function testShow()
+    {
+        $token = $this->authenticate();
+        $this->task = $this->createTask();
+        $task = $this->task;
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token
+        ])->json('GET', route('api.task.view', [
+                'id' => $task->id
+            ])
+        );
+
+        $response->assertStatus(200);
+
+        //Assert title is correct
+        $this->assertEquals($this->title, $response->json()['data']['title']);
+    }
+
+    public function testDelete()
+    {
+        $token = $this->authenticate();
+        $task = $this->createTask();
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token
+        ])->json('DELETE', route('api.task.destroy', [
+                'id' => $task->id
+            ])
+        );
+        $response->assertStatus(200);
+        //Assert there is no todo
+        $this->assertEquals(0, $this->user->tasks()->count());
     }
 
 

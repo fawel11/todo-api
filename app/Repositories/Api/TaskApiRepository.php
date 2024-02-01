@@ -30,11 +30,12 @@ class TaskApiRepository implements RepositoryInterface
 
     public function view($id)
     {
-        $theTask= $this->findById($id);
+        $theTask = $this->findById($id);
 
         if (auth()->user()->cannot('update', $theTask)) {
             abort(403, 'You are not author of the task');
         }
+
         return new TaskResource($theTask);
 
     }
@@ -89,6 +90,7 @@ class TaskApiRepository implements RepositoryInterface
     public function update(UpdateTaskRequest $request, $id)
     {
         $theTask = $this->task::findOrFail($id);
+        Log::info($theTask);
 
         if ($request->user()->cannot('update', $theTask)) {
             abort(403, 'You are not author of the task');

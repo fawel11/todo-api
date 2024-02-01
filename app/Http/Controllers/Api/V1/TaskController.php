@@ -52,9 +52,8 @@ class TaskController extends Controller
 
     public function view($id)
     {
-        $response = $this->task->view($id);
-        $this->respondOk($response, Response::HTTP_OK);
 
+        return $this->task->view($id);
 
     }
 

@@ -34,7 +34,7 @@ Route::group(['prefix' => 'v1'], function () {
             // Route::resource('task', 'TaskController');
             Route::get('/', [TaskController::class, 'index'])->name('api.task.index');
             Route::post('/store', [TaskController::class, 'store'])->name('api.task.store');
-            Route::get('/{id}', [TaskController::class, 'view'])->whereNumber('id')->name('api.task.update');
+            Route::get('/{id}', [TaskController::class, 'view'])->whereNumber('id')->name('api.task.view');
             Route::post('/{id}', [TaskController::class, 'update'])->whereNumber('id')->name('api.task.update');
             Route::post('/mark-complete/{id}', [TaskController::class, 'markAsComplete'])->whereNumber('id')->name('api.task.complete');
             Route::delete('/{id}', [TaskController::class, 'destroy'])->whereNumber('id')->name('api.task.destroy');

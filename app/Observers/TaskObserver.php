@@ -11,11 +11,13 @@ class TaskObserver
 {
     public function creating(Task $task)
     {
+        //If mutator not working then this will ensure author id to be inserted
         $task->author_id = Auth::id();
     }
 
     public function created(Task $task)
     {
+        //We can here set to send notification to admin also
         $task->author->notify(new TaskCreated($task));
 
     }
