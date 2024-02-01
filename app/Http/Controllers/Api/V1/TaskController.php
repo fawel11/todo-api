@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -24,10 +25,6 @@ class TaskController extends Controller
         $this->task = $task::createApi();
     }
 
-    /**
-     * Display a listing of the resource.
-     ** @return TaskResource
-     */
     public function index(Request $request)
 
     {
@@ -50,21 +47,13 @@ class TaskController extends Controller
     public function store(CreateTaskRequest $request)
     {
         $response = $this->task->create($request);
-
-        if ($response instanceof TaskResource) {
-            return response()->json(['message' => 'Task created successfully!', 'data' => $response], 201);
-        }
-        return response()->json(['message' => 'Something went wrong'], 500);
-
+        return $this->respondOk($response, Response::HTTP_CREATED, 'Task created successfully!',);
     }
 
     public function view($id)
     {
         $response = $this->task->view($id);
-        if ($response instanceof TaskResource) {
-            return response()->json(['data' => $response], 201);
-        }
-        return response()->json(['message' => 'Something went wrong'], 500);
+        $this->respondOk($response, Response::HTTP_OK);
 
 
     }
@@ -78,22 +67,14 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, $id)
     {
-
         $response = $this->task->update($request, $id);
-
-        if ($response instanceof TaskResource) {
-            return response()->json(['message' => 'Task updated successfully!', 'data' => $response], 201);
-        }
-        return response()->json(['message' => 'Something went wrong!'], 500);
-
+        return $this->respondOk($response, Response::HTTP_CREATED, 'Task updated successfully!',);
     }
 
     public function markAsComplete($id)
     {
-
         $response = $this->task->markComplete($id);
-        return response()->json(['message' => 'Task has been marked as completed successfully!'], 201);
-
+        $this->respondOk($response, Response::HTTP_OK, 'Task has been marked as completed successfully!',);
     }
 
     /**
@@ -107,7 +88,6 @@ class TaskController extends Controller
         $theTask = $this->task->findById($id);
         $this->authorize('delete', $theTask);
         $deleteTask = $this->task->delete($theTask);
-        return response()->json(['message' => 'Task delete successfully!'], 201);
-
+        return $this->respondOk($deleteTask, Response::HTTP_OK, 'Task has been deleted successfully!',);
     }
 }

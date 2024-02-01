@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -19,21 +21,15 @@ class TaskTest extends TestCase
     protected $description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-
-
-    public function test_user_can_login_and_get_token()
+    protected function authenticate()
     {
-        // Create a user
         $user = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@gmail.com',
             'password' => bcrypt('secret123$'),
         ]);
+
+        $this->user = $user;
 
         $response = $this->postJson('/api/v1/auth/login', [
             'email' => 'test@gmail.com',
@@ -41,20 +37,74 @@ class TaskTest extends TestCase
         ]);
         $response->assertStatus(200);
         $response->assertJsonStructure(['accessToken']);
-        $token = $response->json('accessToken');
-        Sanctum::actingAs($user);
-
-        $this->getJson('/api/v1/auth/logout');
-        $this->assertFalse(auth()->check());
-
-        /*$user = User::factory()->create();
-        Sanctum::actingAs($user);
-
-        // Simulate a GET request to the logout route
-        $response = $this->getJson('/api/v1/auth/logout');
-
-        // Assert that the response has a successful status code (e.g., 200)
-        $response->assertStatus(200);*/
+        return $response->json('accessToken');
     }
+
+
+    /**
+     * A protected method to create a todo
+     *
+     * @return response
+     */
+
+    protected function createTask()
+    {
+        $todo = Task::create([
+            'title' => $this->title,
+            'description' => $this->description
+        ]);
+
+        $this->user->tasks()->save($todo);
+        return $todo;
+
+    }
+
+    public function testStore()
+    {
+        //Get token
+        $token = $this->authenticate();
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->json('POST', route('api.task.store'), [
+            'title' => $this->title,
+            'description' => $this->description
+        ]);
+
+        $response->assertStatus(201);
+
+        $count = $this->user->tasks()->count();
+        $this->assertEquals(1, $count);
+    }
+
+
+    public function testAll()
+    {
+
+        $token = $this->authenticate();
+        $this->createTask();
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->json('GET', route('api.task.index'));
+        $response->assertStatus(200);
+
+        $this->assertEquals(1, count($response->json()));
+        $this->assertEquals($this->title, $response->json()['data'][0]['title']);
+    }
+
+    public function testUpdate()
+    {
+        $token = $this->authenticate();
+        $task = $this->createTask();
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token
+        ])->json('PUT', route('api.task.update', ['id' => $task->id]), [
+            'title' => 'This is an Updated title'
+        ]);
+        $response->assertStatus(200);
+        //Assert title is the new title
+        $this->assertEquals('This is an Updated title', $this->user->todos()->first()->title);
+    }
+
 
 }
