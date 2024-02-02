@@ -23,6 +23,11 @@ class User extends Authenticatable
         'password',
     ];
 
+    // User.php
+
+    protected $appends = ['avatar'];
+
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -45,6 +50,12 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->role === 'admin';
+    }
+
+    public function getAvatarAttribute()
+    {
+        return 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+
     }
 
     public function tasks()

@@ -49,6 +49,7 @@ class TaskApiRepository implements RepositoryInterface
 
         $allTask = $this->task::
         orderBy('id', $order)
+            ->with('author')
             ->whereIn('status', $status)
             ->take($limit)
             ->get();

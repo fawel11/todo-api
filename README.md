@@ -1,8 +1,9 @@
-# Laravel Blog Application
+# Laravel Todo Application
 
 ## Introduction
 
-This is a simple restaurant api application built with Laravel 8.
+This is a simple todo api application built with Laravel 8.
+![Alt Text](public/design.png)
 
 ## Prerequisites
 
@@ -25,7 +26,7 @@ Make sure you have the following installed:
 2. **Navigate to the project directory:**
 
     ```bash
-    cd my-blog
+    cd todo-api
     ```
 
 3. **Install PHP dependencies:**
@@ -89,12 +90,6 @@ Make sure you have the following installed:
     php artisan serve
     ```
 
-2. **Access the application in your browser at [http://localhost:8000](http://localhost:8000)**
-
-3. **Log in using the sample admin credentials:**
-
-    - **Email:** admin@example.com
-    - **Password:** 12345678
 
 ## Additional Configuration
 
